@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BookItemContainer, BooksContainer, FiltersContainer, HomePage, HomePageBackground, Nav } from './LibraryStyles';
+import { BookComponent } from './LibraryComponents';
 
 const books = [
     { title: 'Book 1', author: 'Author 1', subject: 'Subject 1', publishDate: '2022-01-01' },
@@ -58,12 +59,7 @@ export const Homepage = () => {
 
                 <BooksContainer>
                     {filteredBooks.map((book, index) => (
-                        <BookItemContainer key={index}>
-                            <p>{book.title}</p>
-                            <p>Author: {book.author}</p>
-                            <p>Subject: {book.subject}</p>
-                            <p>Publish Date: {book.publishDate}</p>
-                        </BookItemContainer>
+                        <BookComponent key={index} data={book} />
                     ))}
                 </BooksContainer>
 

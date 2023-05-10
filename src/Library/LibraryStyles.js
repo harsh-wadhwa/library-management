@@ -45,14 +45,15 @@ export const BooksContainer = styled.div`
     align-items: center;
     gap: 20px;
     overflow: scroll;
+    overflow-x: hidden
 `
 
 export const FiltersContainer = styled.div`
-    width: 20%;
+    width: 25%;
     height: 90%;    
     position: absolute;
     bottom: 0;
-    right: 10px;
+    right: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -61,7 +62,22 @@ export const FiltersContainer = styled.div`
 
 export const BookItemContainer = styled.div`
     width: 50%;
-    height: 150px;
+    flex: 0 0 150px;
     background: #d7e6fc;
     border-radius: 10px;
+    display: flex;
+    position: relative;
+`
+
+export const PictureContainer = styled.div`
+    width: 40%;
+    height: 100%;
+`
+
+export const DetailContainer = styled.div`
+    width: 60%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 `
