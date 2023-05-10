@@ -13,10 +13,10 @@ export const BookComponent = (props) => {
             </PictureContainer>
 
             <DetailContainer>
-                <div>{data.title}</div>
-                <div>Author: {data.author}</div>
-                <div>Subject: {data.subject}</div>
-                <div>Publish Date: {data.publishDate}</div>
+                <div>{data?.title}</div>
+                <div>Author: {data?.author}</div>
+                <div>pages: {data?.pages}</div>
+                <div>Year: {data?.year}</div>
             </DetailContainer>
         </BookItemContainer>
     )
