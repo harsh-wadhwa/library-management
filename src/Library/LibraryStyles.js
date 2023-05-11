@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import library_image from "../assets/images/library_image.jpg"
-import dark_library from "../assets/images/dark_library.jpg"
+import Modal from 'styled-react-modal'
 
 export const HomePageBackground = styled.div`
     height: 100vh;
@@ -16,7 +16,7 @@ export const HomePageBackground = styled.div`
 export const HomePage = styled.div`
     height: 95vh;
     width: 95vw;
-    background: #ffffff;
+    background: ${({theme}) => (theme === 'dark') ? '#192734' : '#FFFFFF' };
     border-radius: 15px;
     position: relative;
 `
@@ -32,7 +32,9 @@ export const Nav = styled.div`
     align-items: center;
     font-size: 32px;
     font-weight: 800;
+    color: ${({theme}) => (theme === 'dark') ? '#FFFFFF' : '#000' };
 `
+
 
 export const BooksContainer = styled.div`
     width: 70%;
@@ -53,15 +55,16 @@ export const FiltersContainer = styled.div`
     height: 90%;    
     position: absolute;
     bottom: 0;
-    right: 0;
+    right: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 20px;
+    color: ${({theme}) => (theme === 'dark') ? '#FFFFFF' : '#000' };
 `
 
 export const BookItemContainer = styled.div`
-    width: 50%;
+    width: 100%;
     flex: 0 0 150px;
     background: #d7e6fc;
     border-radius: 10px;
@@ -72,6 +75,9 @@ export const BookItemContainer = styled.div`
 export const PictureContainer = styled.div`
     width: 40%;
     height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `
 
 export const DetailContainer = styled.div`
@@ -80,4 +86,15 @@ export const DetailContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
+`
+
+
+export const StyledModal = Modal.styled`
+  width: 80vw;
+  height: 80vh;
+  background: #FFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
 `

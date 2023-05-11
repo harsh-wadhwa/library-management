@@ -1,15 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { BookItemContainer, BooksContainer, FiltersContainer, HomePage, HomePageBackground, Nav } from './LibraryStyles';
-import { BookComponent } from './LibraryComponents';
+import { BookComponent, InfoModal, MaterialUISwitch } from './LibraryComponents';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { ThemeContext } from '../contexts/ThemeContext'
+import InfoIcon from '@mui/icons-material/Info';
+import { Button, TextField } from '@mui/material';
 
 export const Homepage = () => {
 
     const [titleFilter, setTitleFilter] = useState('');
     const [authorFilter, setAuthorFilter] = useState('');
-    const [subjectFilter, setSubjectFilter] = useState('');
+    const [pageFilter, setPageFilter] = useState('');
     const [dateFilter, setDateFilter] = useState('');
+
+    const [infoModalOpen, setIsInfoModalOpen] = useState(true);
+
+    const { theme, toggleTheme } = useContext(ThemeContext);
 
     const [page, setPage] = useState(1);
     const [booksData, setBooksData] = useState([]);
@@ -24,34 +31,27 @@ export const Homepage = () => {
         setAuthorFilter(event.target.value.toLowerCase());
     };
 
-    const handleSubjectFilterChange = (event) => {
-        setSubjectFilter(event.target.value.toLowerCase());
+    const handlePageFilterChange = (event) => {
+        setPageFilter(event.target.value.toLowerCase());
     };
 
     const handleDateFilterChange = (event) => {
         setDateFilter(event.target.value.toLowerCase());
     };
 
-    const filteredBooks = booksData?.filter((book) =>
-        book.title?.toLowerCase()?.includes(titleFilter) &&
-        book.author?.toLowerCase()?.includes(authorFilter) &&
-        book.subject?.toLowerCase()?.includes(subjectFilter) &&
-        book.publishDate?.toLowerCase()?.includes(dateFilter)
-    );
-
     async function setInitialData() {
-        const response = await axios.get(`https://library-server-r1ztupbxx-harsh-wadhwa.vercel.app/books?page=${page}&pageSize=10`);
+        const response = await axios.get(`https://library-server-dukooagnq-harsh-wadhwa.vercel.app/books?page=${page}&pageSize=10&title=${titleFilter}&author=${authorFilter}&publishYear=${dateFilter}&minPages=${pageFilter}`);
         setBooksData(response?.data);
     }
 
     async function fetchData() {
-        setPage(prev => prev+1)
-        const response = await axios.get(`https://library-server-r1ztupbxx-harsh-wadhwa.vercel.app/books?page=${page}&pageSize=10`);
-        if(response?.data?.length === 0) {
+        setPage(prev => prev + 1)
+        const response = await axios.get(`https://library-server-dukooagnq-harsh-wadhwa.vercel.app/books?page=${page}&pageSize=10&title=${titleFilter}&author=${authorFilter}&publishYear=${dateFilter}&minPages=${pageFilter}`);
+        if (response?.data?.length === 0) {
             setHasMore(false);
             setLoadingText("");
         }
-        setBooksData([...booksData,...response?.data]);
+        setBooksData([...booksData, ...response?.data]);
     }
 
     useEffect(() => {
@@ -61,12 +61,14 @@ export const Homepage = () => {
     return (
         <HomePageBackground>
 
-            <HomePage>
+            <HomePage theme={theme}>
 
                 <div>
 
-                    <Nav>
+                    <Nav theme={theme}>
                         The Library
+                        <InfoIcon style={{ position: 'absolute', top: '15px', right: '100px' }} onClick={() => setIsInfoModalOpen(true)} />
+                        <MaterialUISwitch checked={theme === 'dark'} onChange={toggleTheme} />
                     </Nav>
 
                     <BooksContainer id="scrollableDiv">
@@ -82,44 +84,49 @@ export const Homepage = () => {
                                 </p>
                             }
                             scrollableTarget={"scrollableDiv"}
+                            style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}
                         >
 
-                        {booksData?.map((book, index) => (
-                            <BookComponent key={index} data={book} />
-                        ))}
+                            {booksData?.map((book, index) => (
+                                <BookComponent key={index} data={book} />
+                            ))}
 
                         </InfiniteScroll>
 
                     </BooksContainer>
 
 
-                    <FiltersContainer>
+                    <FiltersContainer theme={theme}>
                         <h2>Filters</h2>
-                        <input
-                            type="text"
-                            placeholder="Filter by Title"
+
+                        <TextField
+                            id="outlined-disabled"
+                            label="Title"
                             value={titleFilter}
                             onChange={handleTitleFilterChange}
                         />
-                        <input
-                            type="text"
-                            placeholder="Filter by Author"
+                        <TextField
+                            id="outlined-disabled"
+                            label="Author"
                             value={authorFilter}
                             onChange={handleAuthorFilterChange}
                         />
-                        <input
-                            type="text"
-                            placeholder="Filter by Subject"
-                            value={subjectFilter}
-                            onChange={handleSubjectFilterChange}
+                        <TextField
+                            id="outlined-disabled"
+                            label="Min Pages"
+                            value={pageFilter}
+                            onChange={handlePageFilterChange}
                         />
-                        <input
-                            type="text"
-                            placeholder="Filter by Publish Date"
+                        <TextField
+                            id="outlined-disabled"
+                            label="Year"
                             value={dateFilter}
                             onChange={handleDateFilterChange}
                         />
+                        <Button variant="contained" onClick={()=>{setPage(1); setInitialData();}} >Apply</Button>
                     </FiltersContainer>
+
+                    <InfoModal open={infoModalOpen} toggle={() => setIsInfoModalOpen(prev => !prev)} />
 
                 </div>
 
